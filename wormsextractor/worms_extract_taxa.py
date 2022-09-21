@@ -224,8 +224,8 @@ class TaxaListGenerator:
                 # Translate keys from WoRMS.
                 for from_key, to_key in self.rename_worms_header_items.items():
                     worms_rec[to_key] = worms_rec.get(from_key, "")
-
-               self.taxa_worms_dict[aphia_id] = worms_rec
+                #
+                self.taxa_worms_dict[aphia_id] = worms_rec
 
     def add_parent_info(self):
         """Add parent info to built classification hierarchies."""
@@ -271,6 +271,11 @@ class TaxaListGenerator:
 
     def save_results(self):
         """Save the results"""
+        # Create data_out if not exists.
+        data_out_path = pathlib.Path(self.data_out_dir)
+        if not data_out_path.exists():
+            data_out_path.mkdir()
+        #
         self.save_errors()
         self.save_taxa_worms()
 
@@ -292,7 +297,9 @@ class TaxaListGenerator:
                             row_dict = dict(zip(header, row))
                             aphia_id = row_dict.get("used_aphia_id", "")
                             if aphia_id:
-                                self.indata_aphia_id_list.append(aphia_id)
+                                # Avoid duplicates.
+                                if aphia_id not in self.indata_aphia_id_list:
+                                    self.indata_aphia_id_list.append(aphia_id)
             print("")
 
     def save_taxa_worms(self):
