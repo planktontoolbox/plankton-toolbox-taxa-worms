@@ -1,4 +1,4 @@
-AphiaID
+used_aphia_id
 103987
 118011
 118047
